@@ -114,6 +114,15 @@ WHERE [IdealCustomer] = 'No Renewals'
  246661 of the patrons has renewen at least one item and 103209 of the patrons has not renewed any item. 
  
  However, this does not really paint the whole picture of the ratio between loaned items and renewed items. 
+ So we create a new column to check the percentage of renewed items for each patron. 
+ 
+ ````sql
+ SELECT *,
+ROUND(([Total Renewals]/[Total Checkouts]),3)*100 AS PercentageRenewals
+FROM IdealCustomerTable
+ ````
+ ![image](https://user-images.githubusercontent.com/114582898/198242016-01ac32ab-2615-4a11-a925-8b34cf7489e2.png)
+
  
 
 
