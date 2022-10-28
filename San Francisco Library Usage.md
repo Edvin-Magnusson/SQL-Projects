@@ -20,7 +20,7 @@ WHERE table_name='LibraryUsage'
 ````
 The dataset consists of 423 448 rows and 15 columns.
 
-Ordering the dataset by the **Total Checkouts** column to see which patron that has most total checkouts. 
+Ordering the dataset by the **Total Checkouts** column to see which patron has the most total checkouts.
 
 ````sql
 SELECT *
@@ -58,11 +58,10 @@ SELECT SUM ([Total Checkouts])
 FROM LibraryUsage
 ````
 The total number of checkouts is 68590995.
-
-It would probalby be of interest for the library staff to know how many of the patrons that 
+It would probably be of interest for the library staff to know how many of the patrons that 
 has never requested a renewal of a loaned item. 
-In the dataset there is a lot of patrons that has not checked out any item from the library.
-Therefore we will create a temporary table with only patrons that has checked out at least 1 item. 
+In the dataset, there are a lot of patrons that have not checked out any item from the library.
+Therefore we will create a temporary table with only patrons that have checked out at least 1 item. 
 
 ````sql
 Drop table if exists IdealCustomerTable
@@ -99,10 +98,10 @@ SELECT COUNT (*)
 FROM IdealCustomerTable
 ````
 
-The library has 349 870 patrons that has checked out at least one item during this period.
-Since the dataset contains 423 448 registered patrons we can draw the conclusion that 73 578 of these patrons has not checked out any item. 
+The library has 349 870 patrons that have checked out at least one item during this period.
+Since the dataset contains 423 448 registered patrons we can conclude that 73 578 of these patrons have not checked out any item. 
 
-Checking number of patrons that has renewed the loan for at least one item and the number of patrons that has not renewed the loan for any item.
+Checking the number of patrons that have renewed the loan for at least one item and the number of patrons that have not renewed the loan for any item.
 ````sql
 SELECT COUNT(*)
 FROM IdealCustomerTable
@@ -112,10 +111,9 @@ SELECT COUNT(*)
 FROM IdealCustomerTable
 WHERE [IdealCustomer] = 'No Renewals'
 ````
- 246 661 of the patrons has renewen at least one item and 103 209 of the patrons has not renewed any item. 
- 
- However, this does not really paint the whole picture of the ratio between loaned items and renewals for loaned items. 
- So we create a new column to check the percentage of renewed items for each patron. 
+ 246 661 of the patrons have renewed at least one item and 103 209 of the patrons have not renewed any item. 
+ However, this does not paint the whole picture of the ratio between loaned items and renewals for loaned items. 
+ So we create a new column to check the percentage of renewed items for each patron.
  
  ````sql
  SELECT TOP 10 *,
@@ -124,7 +122,7 @@ FROM IdealCustomerTable
  ````
  ![image](https://user-images.githubusercontent.com/114582898/198242016-01ac32ab-2615-4a11-a925-8b34cf7489e2.png)
 
- Lets have a look at the patrons with most renewals. 
+ Lets have a look at the patrons with the most renewals. 
  
   ````sql
 SELECT TOP 10 *,
@@ -141,10 +139,10 @@ SELECT COUNT(DISTINCT [Home Library Definition]) AS #DifferentHomeLibraires
 FROM LibraryUsage
 
 ````
-There is 35 different libraries in the dataset, well 34 libraries one of them is listed as "Unkown".
+There are 35 different libraries in the dataset, well 34 libraries one of them is listed as "Unkown".
 
-Lets order these libraries based on total number of checked out items.
-In some cases it is unknown from which library the item was checked out from so we will exclude them. 
+Let's order these libraries based on the total number of checked-out items.
+In some cases it is unknown from which library the item was checked out from so we will exclude them.  
 
 
 ````sql
