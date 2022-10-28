@@ -1,7 +1,7 @@
 # Covid-19 Project 
 
 - In this project I have used two tables, one containing information on deaths associated with covid and one with information on covid vaccinations. 
-- So 
+- 
 
 ## Datasets 
 
