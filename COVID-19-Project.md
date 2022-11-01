@@ -80,7 +80,46 @@ ORDER BY 2 DESC ;
 ![image](https://user-images.githubusercontent.com/114582898/199202215-db2b30fc-0599-494f-aaa8-e525dc4d392e.png)
 
 
+Looking at countries with highest infection rate compared to population. 
 
+````sql
+SELECT Location,Population, MAX(total_cases) AS HighestInfectionCount,MAX((total_cases/Population))*100 AS PercentagePopulationInfected  
+FROM CovidDeaths
+GROUP BY Location,Population
+ORDER BY PercentagePopulationInfected DESC;
+
+````
+![image](https://user-images.githubusercontent.com/114582898/199241594-25cd6c8a-5331-4d93-8d24-400f4bc567d1.png)
+
+As expected, small countries have the highest infection rates. 
+
+If we look at the countries with the most total cases, we get the larger countries.
+
+````sql
+SELECT Location,Population, MAX(total_cases) AS HighestInfectionCount,MAX((total_cases/Population))*100 AS PercentagePopulationInfected  
+FROM CovidDeaths
+WHERE continent is not null
+GROUP BY Location,Population
+ORDER BY HighestInfectionCount DESC;
+
+````
+
+![image](https://user-images.githubusercontent.com/114582898/199244117-583f769f-f018-4972-89cb-2a1d0e5e441c.png)
+
+Let's break things down by looking at infection rates for continents.
+
+````sql
+SELECT Location,Population, MAX(total_cases) AS HighestInfectionCount,MAX((total_cases/Population))*100 AS PercentagePopulationInfected  
+FROM CovidDeaths
+WHERE continent is NULL
+GROUP BY Location,Population
+ORDER BY PercentagePopulationInfected DESC;
+
+````
+![image](https://user-images.githubusercontent.com/114582898/199246913-83db4450-d0fd-4158-a578-d6d41a21addb.png)
+
+We get the all the continents but also some aggregated locations based on income levels for the countries in the dataset. 
+We get all the continents, but also some aggregated locations based on income levels for the countries. It seems like we have a relationship where lower income countires have lower infection rates. This is probably a consequence of lower capacity for testing. 
 
 
 
