@@ -119,8 +119,22 @@ ORDER BY PercentagePopulationInfected DESC;
 ````
 ![image](https://user-images.githubusercontent.com/114582898/199246913-83db4450-d0fd-4158-a578-d6d41a21addb.png)
 
-We get the all the continents but also some aggregated locations based on income levels for the countries in the dataset. 
-We get all the continents, but also some aggregated locations based on income levels for the countries. It seems like we have a relationship where lower income countires have lower infection rates. This is probably a consequence of lower capacity for testing. 
+We get all the continents, but also some aggregated locations based on income levels for the countries. We can see a relationship where lower-income countries have lower infection rates. This is probably a consequence of the lower capacity for testing. 
+
+
+Let's group daily cases, daily deaths, and daily death percentage by date. By doing this, we get global numbers for each day. 
+````sql
+SELECT DateConverted, SUM(new_cases) AS Daily_Cases, SUM(new_deaths) AS Daily_Deaths ,
+ SUM(new_deaths)/SUM(new_cases)*100 AS Daily_DeathPercentage
+FROM CovidDeaths
+WHERE continent is not null 
+GROUP BY DateConverted
+ORDER BY 1 DESC
+````
+
+![image](https://user-images.githubusercontent.com/114582898/199442083-b04b4418-a8bf-42e9-836d-3c1e1c609235.png)
+
+
 
 
 
