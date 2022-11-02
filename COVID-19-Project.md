@@ -135,6 +135,50 @@ ORDER BY 1 DESC
 ![image](https://user-images.githubusercontent.com/114582898/199442083-b04b4418-a8bf-42e9-836d-3c1e1c609235.png)
 
 
+Now let's involve the vaccinations table in the analysis. We join the two tables on the **location** and the **date** variables, and since we will only use the **new_vaccinations** variable from the vaccinations table, we can use the cast function to change the data type.
 
+  Let's create a new variable called **RollingPeopleVaccinated** that represents the cumulative number of vaccinations for each country.
+  
+  ````sql
+  SELECT  dea.continent, dea.location, dea.DateConverted, dea.population, vac.new_vaccinations
+, SUM(CAST(vac.new_vaccinations AS DECIMAL(18,2))) OVER (PARTITION BY dea.location
+ORDER BY dea.location,dea.DateConverted) AS RollingPeopleVaccinated 
+FROM CovidDeaths dea
+JOIN CovidVaccinations vac
+    ON dea.location = vac.location
+	AND dea.date=vac.date
+	WHERE dea.continent is not null
+	ORDER BY 2,3
+  
+  ````
+  
+  
+  
+  
+![image](https://user-images.githubusercontent.com/114582898/199456709-7e68da52-41e8-411e-bf13-709e63b7cec6.png)
+
+In the results, we can see that the column for **RollingPeopleVaccinated** adds up new vaccinations to a cumulative sum.
+
+The problem with this is that if we want to use the new variable **RollingPeopleVaccinated** for further calculations we need to create a common table expression (CTE).  So lets create a new variable where we calculate the cumulative percentage of vaccinated people for each country with a CTE. 
+
+````sql
+WITH PopvsVac( Continent, location, DateConverted, population, new_vaccinations, RollingPeobleVaccinated)
+AS 
+(
+SELECT  dea.continent, dea.location, dea.DateConverted, dea.population, vac.new_vaccinations
+, SUM(CAST(vac.new_vaccinations AS DECIMAL(18,2))) OVER (PARTITION BY dea.location
+ORDER BY dea.location,dea.DateConverted) AS RollingPeopleVaccinated 
+FROM CovidDeaths dea
+JOIN CovidVaccinations vac
+    ON dea.location = vac.location
+	AND dea.date=vac.date
+	WHERE dea.continent is not null
+	)
+SELECT * , (RollingPeobleVaccinated/population)*100 AS RollingPercentageVaccinated
+FROM PopvsVac
+
+````
+
+![image](https://user-images.githubusercontent.com/114582898/199466135-bf4ac92d-abed-44f7-8fa4-ada4eb395466.png)
 
 
