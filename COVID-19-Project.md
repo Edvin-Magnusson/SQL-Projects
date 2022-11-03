@@ -182,3 +182,51 @@ FROM PopvsVac
 ![image](https://user-images.githubusercontent.com/114582898/199466135-bf4ac92d-abed-44f7-8fa4-ada4eb395466.png)
 
 
+Another alternative when we want to use columns we have created for new calculations is to create a temp table (temporary table). 
+Let's create a temp table where we take **location** based on income level and group it with **population** and **total vaccinations**.
+
+````sql
+DROP TABLE IF EXISTS #GDP_Vaccinations
+CREATE TABLE #GDP_Vaccinations 
+(
+Location nvarchar(255),
+Population numeric, 
+Total_Vaccinations numeric, 
+
+) 
+
+INSERT INTO #GDP_Vaccinations
+SELECT vac.location , dea.population, sum(cast(vac.new_vaccinations as decimal(18,2)))AS Total_Vaccinations 
+
+FROM CovidVaccinations vac
+JOIN CovidDeaths dea
+  ON dea.location = vac.location
+  AND dea.date=vac.date
+WHERE dea.location LIKE '%low income%' OR dea.location LIKE '%lower middle income%' 
+OR dea.location LIKE '%Upper middle income%' or dea.location LIKE '%high income%'
+AND vac.location LIKE '%low income%' OR vac.location LIKE '%lower middle income%'
+OR vac.location LIKE '%Upper middle income%' OR vac.location LIKE '%high income%'
+GROUP BY dea.location,vac.location,dea.population
+ SELECT * 
+FROM #GDP_Vaccinations 
+
+````
+![image](https://user-images.githubusercontent.com/114582898/199698865-b19f1f8a-40e0-4886-976b-422cc1713048.png)
+
+
+Now we can use the temp table for further calculations. 
+Let's say we want to check the percentage of the population that is vaccinated. 
+
+```` sql
+SELECT *, CAST(((Population/Total_vaccinations)*100) AS NUMERIC(36,2))AS PercentVaccinated
+FROM #GDP_Vaccinations
+
+````
+![image](https://user-images.githubusercontent.com/114582898/199701578-ac756915-bc86-42b4-a57d-834070e94302.png)
+
+These numbers do not seem to be legit but after some double-checking, the numbers are correct. The vaccinations for low income countries are about 315%  which can be correct considering that people get multiple vaccinations, but the numbers for high-income countries seem a bit too low at only 47%. So I think the quality of this data is a bit unreliable when it comes to the classifications of income levels for the countries. However, the calculations are correct. 
+
+
+
+
+
